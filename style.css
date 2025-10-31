@@ -1,0 +1,7 @@
+:root {
+    --slidev-code-font-size: 1.5em; /* Change this value as needed */
+}
+
+div.mermaid {
+  margin: 50px;
+}
