@@ -6,7 +6,16 @@ background: ./img/title.png
 # Comprendre les compilateurs
 ## Plus simple qu’il n’y paraît!
 
+<br />
+<br />
+
 #### Philippe Vlérick - philippe.vlerick@worldline.com
+
+![Dragon Book](./img/Logo_Worldline_-_2021.svg.png "Worldline")
+
+<style>
+img {display: block; margin: auto; height: 100px;}
+</style>
 
 ---
 layout: quote
@@ -14,7 +23,7 @@ layout: quote
 
 # _Qu'est-ce qu'un compilateur?_
 
-> ## un logiciel qui traduit un langage que je comprend en un langage que l'ordinateur comprend.
+> ## un logiciel qui traduit un langage que je comprends en un langage que l'ordinateur comprend.
 
 ---
 layout: quote
@@ -22,7 +31,7 @@ layout: quote
 
 # _Plus formelle_
 
-> ## un logiciel qui lit un programme dans un langage - le langage source - et le traduit en un logiciel équivalent dans un autre lagage - le langage cible
+> ## un logiciel qui lit un logiciel dans un langage - le langage source - et le traduit en un logiciel équivalent dans un autre langage - le langage cible
 
 ![Dragon Book](./img/dragon_book.jpg "Dragon Book")
 
@@ -84,7 +93,7 @@ flowchart TB
 
 ---
 layout: fact
---
+---
 
 ## Prise individuellement, ces _étapes_ ne sont pas aussi intimidantes
 
@@ -99,33 +108,33 @@ background: ./img/wizard.png
 layout: fact
 ---
 
-## Consumes Characters, Produces Tokens
+## Caractères -> _Tokens_
 
 ```mermaid
 flowchart LR
-    char_stream@{ shape: doc, label: "character stream"}
+    char_stream@{ shape: doc, label: "flux de caractères"}
     scanner["Scanner"]
-    token_stream@{ shape: doc, label: "token stream"}
+    token_stream@{ shape: doc, label: "flux de _tokens_"}
     char_stream --> scanner --> token_stream
 ```
 
 ---
 
-# Source Code
+# Code source
 
-```c
-char *foo = "bar";
+```csharp
+var name = "foo";
 ```
 
 ---
 
 ```mermaid
 flowchart TB
-    subgraph char_stream [character stream]
-    c~~~h~~~a~~~r~~~sp1["SP"]~~~star1[#42;]~~~f~~~etc@{ shape: braces, label: "..." }~~~sc1["#59;"]
+    subgraph char_stream [flux de caractères]
+    v~~~a~~~r~~~sp1["#60;SP#62;"]~~~n~~~etc@{ shape: braces, label: "..." }~~~o~~~qt["#34;"]~~~sc1["#59;"]
     end
-    subgraph token_stream [token stream]
-    char~~~star2[#42;]~~~foo~~~eq2["#61;"]~~~str["#34;bar#34;"]~~~sc2["#59;"]
+    subgraph token_stream [flux de _tokens_]
+    var~~~name~~~eq["#61;"]~~~str["#34;foo#34;"]~~~sc2["#59;"]
     end
     char_stream --> token_stream
 ```
@@ -141,11 +150,11 @@ background: ./img/wizard.png
 layout: fact
 ---
 
-## Consumes Token, Produces Abstract Syntax Tree (AST)
+## _Tokens_ -> _Abstract Syntax Tree_ (AST)
 
 ```mermaid
 flowchart LR
-    token_stream@{ shape: doc, label: "token stream"}
+    token_stream@{ shape: doc, label: "flux de _tokens_"}
     parser["Parser"]
     syntax_tree@{ shape: doc, label: "Abstract Syntax Tree"}
     token_stream --> parser --> syntax_tree
@@ -157,58 +166,62 @@ layout: fact
 
 ```mermaid
 flowchart TB
-    subgraph token_stream [token stream]
-    char~~~star2[#42;]~~~foo~~~eq2["#61;"]~~~str["#34;bar#34;"]~~~sc2["#59;"]
+    subgraph token_stream [flux de _tokens_]
+    var~~~name~~~eq["#61;"]~~~str["#34;foo#34;"]~~~sc2["#59;"]
     end
-    subgraph syntax_tree [syntax tree]
+    subgraph syntax_tree [Abstract Syntax Tree]
         direction TB
-        a["assignment (=)"]
-        u["unary (*)"]
-        c["constant (#34;bar#34;)"]
-        d["variable (foo)"]
-        a --- u & c
-        u --- d
+        a["assignation (=)"]
+        c["constante (#34;foo#34;)"]
+        d["variable (name)"]
+        a --- d & c
     end
     token_stream --> syntax_tree
 ```
 
 ---
 layout: cover
+---
+
+# Demo
+
+---
+layout: cover
 background: ./img/wizard.png
 ---
 
-# _Compiler_ or _Interpreter_?
+# _Compilateur_ ou _Interpréteur_?
 
 ---
 layout: fact
 ---
 
-## A Compiler _translates_ a program
+## Un compilateur _traduit_ un logiciel
 
 ```mermaid
 flowchart LR
-    source@{ shape: doc, label: "source program"}
-    compiler["Compiler"]
-    target@{ shape: doc, label: "target program"}
+    source@{ shape: doc, label: "logiciel source"}
+    compiler["Compilateur"]
+    target@{ shape: doc, label: "logiciel cible"}
     source --> compiler --> target
     style source fill:#00137F
     style target fill:#00137F
 ```
 
-## ...but does not run it
+## ...mais ne l'exécute pas
 
 ---
 layout: fact
 ---
 
-## An Interpreter _runs_ a program from source
+## Un interpréteur _exécute_ un logiciel à partir des sources
 
 ```mermaid
 flowchart LR
-    source@{ shape: doc, label: "source program"}
-    input@{ shape: doc, label: "input"}
-    interpreter["Interpreter"]
-    output@{ shape: doc, label: "output"}
+    source@{ shape: doc, label: "logiciel source"}
+    input@{ shape: doc, label: "entrée"}
+    interpreter["Interpréteur"]
+    output@{ shape: doc, label: "sortie"}
     source --> interpreter --> output
     input --> interpreter
     style source fill:#00137F
@@ -221,23 +234,23 @@ layout: cover
 background: ./img/wizard.png
 ---
 
-# Compilers' Structure
+# Structure d'un compilateur
 
 ---
 layout: fact
 ---
 
-## _Three Phases Design_
+## _Design en trois phase_
 
 ```mermaid
 flowchart LR
-    source@{ shape: doc, label: "source code"}
-    target@{ shape: doc, label: "machine code"}
-    subgraph compiler [Compiler]
+    source@{ shape: doc, label: "logiciel source"}
+    target@{ shape: doc, label: "instructions machine"}
+    subgraph compiler [Compilateur]
         direction LR
-        frontend["Frontend"]
-        optimizer["Optimizer"]
-        backend["Backend"]
+        frontend["_Frontend_"]
+        optimizer["_Optimisateur_"]
+        backend["_Backend_"]
         frontend --> optimizer
         optimizer --> backend
     end
@@ -255,20 +268,22 @@ layout: normal
 
 - Scanning/_Lexing_
 - Parsing
-- Semantic Analysis
-- Conversion to Intermediate Representation
+- "Desugaring"
+- Analyse sémantique
+- Conversion en représentation intermédiaire (IR)
 
 ---
 layout: normal
 ---
 
-# Optimizer
+# Optimisateur
 
-- Dead Code Elimination
-- Inlining
-- Constant Folding
-- Constant Propagation
-- Loop Unrolling
+- _Dead Code Elimination_
+- _Inlining_
+- _Constant Folding_
+- _Constant Propagation_
+- _Loop Unrolling_
+- ...
 
 ---
 layout: normal
@@ -276,15 +291,15 @@ layout: normal
 
 # Backend
 
-- Machine Code Generation
-  - Target-specific Instructions
-  - Target-specific Optimizations
+- Génération du code machine
+  - Instruction spécifiques à la plateforme cible
+  - Optimisations spécifiques à la plateforme cible
 
 ---
 layout: fact
 ---
 
-## LLVM Example
+## Exemple: LLVM
 
 ```mermaid
 flowchart LR
@@ -299,8 +314,8 @@ flowchart LR
         swift["_swiftc_"]
         rust["_rustc_"]
     end
-    subgraph optimizer [Optimizer]
-        optimizers@{ shape: processes, label: "optimizers" }
+    subgraph optimizer [Optimisateurs]
+        optimizers@{ shape: processes, label: "optimisateur" }
     end
     subgraph backend [Backend]
         direction TB
@@ -325,22 +340,22 @@ flowchart LR
 layout: fact
 ---
 
-## JVM Example
+## Exemple: _dotnet_
 
 ```mermaid
 flowchart LR
-    source_java@{ shape: doc, label: ".java"}
-    source_kotlin@{ shape: doc, label: ".kt"}
-    source_scala@{ shape: doc, label: ".scala"}
+    source_cshap@{ shape: doc, label: ".cs"}
+    source_vb@{ shape: doc, label: ".vb"}
+    source_fsharp@{ shape: doc, label: ".fs"}
     target_x86@{ shape: doc, label: "x86"}
     target_arm@{ shape: doc, label: "ARM"}
     subgraph frontend [Frontend]
         direction TB
-        java["_javac_"]
-        kotlin["_kotlinc_"]
-        scala["_scalac_"]
+        csharp["_csc.dll_"]
+        vb["_vb.dll_"]
+        fshap["_fsc.dll_"]
     end
-    subgraph optimizer [Optimizer]
+    subgraph optimizer [Optimisateur]
     direction TB
         jit_op[JIT]
     end
@@ -348,18 +363,46 @@ flowchart LR
     direction TB
         jit_be[JIT]
     end
-    source_java --> java
-    source_kotlin --> kotlin
-    source_scala --> scala
-    java & kotlin & scala -- .class --> optimizer
+    source_cshap --> csharp
+    source_vb --> vb
+    source_fsharp --> fshap
+    csharp & vb & fshap -- .dll --> optimizer
     optimizer --> backend
     backend --> target_x86 & target_arm
-    style source_java fill:#00137F
-    style source_kotlin fill:#00137F
-    style source_scala fill:#00137F
+    style source_cshap fill:#00137F
+    style source_vb fill:#00137F
+    style source_fsharp fill:#00137F
     style target_x86 fill:#00137F
     style target_arm fill:#00137F
 ```
+
+---
+layout: cover
+background: ./img/wizard.png
+---
+
+# _Desugaring_
+
+---
+layout: fact
+---
+
+## Transformer des instructions de _haut niveau_ en instructions plus simple (et souvent plus longues) du même langage
+
+---
+layout: cover
+background: ./img/wizard.png
+---
+
+# Optimisations
+
+---
+layout: normal
+---
+
+- _Constant Folding_
+- _Constant Propagation_
+- _Dead code elimination_
 
 ---
 layout: cover
@@ -372,15 +415,26 @@ background: ./img/wizard.png
 layout: normal
 --- 
 
-# Compilers are Software
-- They can be understood one step at the time
-- You could write a simple one yourself, there is no magic
+# Les compilateurs sont des logiciels
+- Ils peuvent être compris, pas à pas
+- Vous pourriez en écrire un vous-même, il n'y a aucune magie
 
 ---
 layout: normal
 --- 
 
-# If you want to learn more by doing
+# Pour aller plus loin - en faisant
 - https://craftinginterpreters.com/
 
 ![Crafting Interpreters](./img/crafting_interpreters.png "Crafting Interpreters")
+
+---
+layout: center
+---
+
+![Feedback](./img/feedback.png "Feedback QR code")
+
+<style>
+img {display: block; margin: auto; height: 300px;}
+.slidev-layout {height: 100%; background: #E0E0E0;}
+</style>
